@@ -27,7 +27,7 @@ abstract AbstractMvLogNormal <: ContinuousMultivariateDistribution
 
 function insupport{T<:Real,D<:AbstractMvLogNormal}(::Type{D},x::AbstractVector{T})
     for i=1:length(x)
-      @inbounds 0.0<x[i]<Inf?continue:(return false)
+      @inbounds 0.0<x[i]<Inf ? continue : (return false)
     end
     true
 end
@@ -138,8 +138,8 @@ entropy(d::MvLogNormal) = length(d)*(1+log2π)/2 + logdetcov(d.normal)/2 + sum(m
 
 #See https://en.wikipedia.org/wiki/Log-normal_distribution
 _rand!{T<:Real}(d::MvLogNormal,x::AbstractVector{T}) = exp!(_rand!(d.normal,x))
-_logpdf{T<:Real}(d::MvLogNormal,x::AbstractVector{T}) = insupport(d,x)?(_logpdf(d.normal,log(x))-sum(log(x))):-Inf
-_pdf{T<:Real}(d::MvLogNormal,x::AbstractVector{T}) = insupport(d,x)?_pdf(d.normal,log(x))/prod(x):0.0
+_logpdf{T<:Real}(d::MvLogNormal,x::AbstractVector{T}) = insupport(d,x) ? (_logpdf(d.normal,log(x))-sum(log(x))) : -Inf
+_pdf{T<:Real}(d::MvLogNormal,x::AbstractVector{T}) = insupport(d,x) ? _pdf(d.normal,log(x))/prod(x) : 0.0
 
 Base.show(io::IO,d::MvLogNormal) = show_multline(io,d,[(:dim,length(d)),(:μ,mean(d.normal)),(:Σ,cov(d.normal))])
 
